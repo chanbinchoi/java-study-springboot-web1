@@ -1,24 +1,38 @@
 package com.telusko.SpringBootWeb1;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@Controller  // 이 클래스가 웹 요청 처리 담당
 public class HomeController {
 
-    @RequestMapping("/")
-    public String home() {
-        System.out.println("home method Called");
-        return "index.jsp";
+    @ModelAttribute("course") // 기본 세팅값 자동 주입
+    public String courseName() {
+        return "java";
     }
 
-    @RequestMapping("add")
-    public String add(HttpServletRequest req) {
-        int num1 = Integer.parseInt(req.getParameter("num1"));
-        int num2 = Integer.parseInt(req.getParameter("num2"));
-        int result = num1 + num2;
-        
-        return "result.jsp";
+    @RequestMapping("/")  // "/" 요청 처리
+    public String home() {
+        return "index";  // /views/index.jsp 반환
+    }
+
+    @RequestMapping("add")  // "/add" 요청 처리
+    public ModelAndView add(@RequestParam("num1") int num1,
+                            @RequestParam("num2") int num2,
+                            ModelAndView mv) {
+
+        int result = num1 + num2;  // 계산
+
+        mv.addObject("result", result);  // JSP로 데이터 전달
+        mv.setViewName("result");        // result.jsp 이동
+        return mv;
+    }
+
+    @RequestMapping("addAlien")  // "/addAlien" 요청 처리
+    public String addAlien(Alien alien) {
+        return "result";
     }
 }
